@@ -35,7 +35,7 @@
                                                 <th>Invoice No. | Date</th>
                                                 <th>Customer | Warehouse </th>
                                                 <th>Total Amount </th>
-                                                <th>Discount </th>
+                                                <th>FBR (TAX) </th>
                                                 <th>Payable </th>
                                                 <th>Received </th>
                                                 <!-- <th>Recipt </th> -->
@@ -63,7 +63,7 @@
 
                                                 </td>
                                                 <td>
-                                                    {{ $Sale->discount }}
+                                                    {{ $Sale->tax }}%
                                                 </td>
                                                 <td>
                                                     <span class="fw-bold">{{ $Sale->Payable_amount }}</span>

@@ -156,10 +156,10 @@
 
                                                 <div class="col-sm-12">
                                                     <div class="form-group">
-                                                        <label>Discount</label>
+                                                        <label>FBR Tax (%)</label>
                                                         <div class="input-group">
-                                                            <span class="input-group-text">Pkr</span>
-                                                            <input type="number" id="discount" name="discount" class="form-control" step="any">
+                                                            <span class="input-group-text">%</span>
+                                                            <input type="number" id="tax" name="tax" class="form-control" step="any">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -174,24 +174,7 @@
                                                     </div>
                                                 </div>
 
-                                                
-
-                                                <div class="col-xl-12 col-sm-12">
-                                                    <div class="form-group">
-                                                        <label class="form-label">Previous Balance</label>
-                                                        <input type="text" class="form-control" id="previous_balance" name="previous_balance" readonly>
-                                                    </div>
-                                                </div>
                                                 <div class="col-sm-12">
-                                                    <div class="form-group">
-                                                        <label>Closing Balance</label>
-                                                        <div class="input-group">
-                                                            <input type="text" id="closing_balance" name="closing_balance" class="form-control" readonly>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- <div class="col-sm-12">
                                                     <div class="form-group">
                                                         <label>Cash Received</label>
                                                         <div class="input-group">
@@ -199,12 +182,20 @@
                                                             <input type="number" name="cash_received" id="cashReceived" class="form-control">
                                                         </div>
                                                     </div>
-                                                </div> -->
-                                                
-                                                <!-- Cash Payment Fields End -->
+                                                </div>
 
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <label>Cash Return</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text">Pkr</span>
+                                                            <input type="number" id="cashReturn" name="cash_return" class="form-control" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
+
 
                                     </div>
 
@@ -230,30 +221,10 @@
 
     <script>
         $(document).ready(function() {
-            // Customer selection change
-            $('#customer-select').change(function() {
-                const customerData = $(this).val().split('|');
-                const customerId = customerData[0];
-                // alert(customerId);
-                if (customerId) {
-                    $.ajax({
-                        url: "{{ route('get-customer-amount', ':id') }}".replace(':id', customerId),
-                        type: 'GET',
-                        success: function(response) {
-                            $('#previous_balance').val(response.previous_balance || 0);
-                            updateClosingBalance(); // Calculate closing balance initially
-                        },
-                        error: function(xhr) {
-                            console.error("Error fetching customer amount: ", xhr);
-                        }
-                    });
-                }
-            });
-
-            // Update total price and payable amount on input change
-            $('input[name="total_price"]').on('input', calculateTotalPrice);
-            $('#discount').on('input', calculatePayableAmount);
-            $('#cashReceived').on('input', updateClosingBalance); // Trigger closing balance update on cash received input
+            // Input changes listeners
+            $('input[name="total_price"]').on('input', calculatePayableAmount);
+            $('#tax').on('input', calculatePayableAmount);
+            $('#cashReceived').on('input', updateCashReturn);
 
             // Function to calculate total price
             function calculateTotalPrice() {
@@ -268,25 +239,23 @@
                 calculatePayableAmount(); // Update payable amount
             }
 
-            // Function to calculate payable amount
             function calculatePayableAmount() {
                 const totalPrice = parseFloat($('.total_price').val()) || 0;
-                const discount = parseFloat($('#discount').val()) || 0;
-                const payableAmount = Math.max(0, totalPrice - discount);
+                const taxPercentage = parseFloat($('#tax').val()) || 0;
+
+                const taxAmount = (totalPrice * taxPercentage) / 100;
+                const payableAmount = totalPrice + taxAmount;
 
                 $('.payable_amount').val(payableAmount.toFixed(2));
-                updateClosingBalance(); // Update closing balance
+                updateCashReturn();
             }
 
-            // Function to update closing balance
-            function updateClosingBalance() {
-                const previousBalance = parseFloat($('#previous_balance').val()) || 0;
+            function updateCashReturn() {
                 const payableAmount = parseFloat($('.payable_amount').val()) || 0;
                 const cashReceived = parseFloat($('#cashReceived').val()) || 0;
 
-                const closingBalance = Math.max(0, previousBalance + payableAmount - cashReceived);
-
-                $('#closing_balance').val(closingBalance.toFixed(2));
+                const cashReturn = Math.max(0, cashReceived - payableAmount);
+                $('#cashReturn').val(cashReturn.toFixed(2));
             }
 
             // Add a new row

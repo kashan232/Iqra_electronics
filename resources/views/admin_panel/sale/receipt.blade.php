@@ -118,11 +118,11 @@
     <div class="receipt-container">
         <!-- Receipt Header -->
         <div class="receipt-header">
-            <img src="../assets/admin/images/BB_logo.png" alt="Company Logo">
-            <h2>Beauty Base Cosmetics</h2>
-            <p><strong>Cash Memo</strong></p>
-            <p><strong>Address:</strong> Resham Bazar</p>
-            <p><strong>Phone:</strong> 0313-300452-0</p>
+            <!-- <img src="../assets/admin/images/BB_logo.png" alt="Company Logo"> -->
+            <h2>Iqra Electronics</h2>
+            <p><strong>Sale Receipt</strong></p>
+            <p><strong>Address:</strong> Address here</p>
+            <p><strong>Phone:</strong> 0315-551548-5</p>
         </div>
 
         <!-- Sale Details -->
@@ -158,24 +158,20 @@
                     <td>{{ $sale->total_price }}</td>
                 </tr>
                 <tr class="totals">
-                    <td colspan="3">Discount</td>
-                    <td>{{ $sale->discount }}</td>
+                    <td colspan="3">FBR Tax (%)</td>
+                    <td>{{ $sale->tax }}%</td>
                 </tr>
                 <tr class="totals">
                     <td colspan="3">Net Total</td>
                     <td><strong>{{ $sale->Payable_amount }}</strong></td>
                 </tr>
                 <tr class="totals">
-                    <td colspan="3">Previous Balance</td>
-                    <td>{{ $previous_balance }}</td>
-                </tr>
-                <tr class="totals">
-                    <td colspan="3">Closing Balance</td>
-                    <td>{{ $closing_balance }}</td>
-                </tr>
-                <tr class="totals">
                     <td colspan="3">Cash Received</td>
                     <td>{{ $sale->cash_received }}</td>
+                </tr>
+                <tr class="totals">
+                    <td colspan="3">Cash Return</td>
+                    <td>{{ $sale->change_return }}</td>
                 </tr>
             </tfoot>
         </table>
